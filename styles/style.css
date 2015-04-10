@@ -1,0 +1,91 @@
+* {
+  -webkit-user-select: none;
+}
+
+body {
+  background-image: url('../assets/images/htmlbg.png')
+}
+
+.files {
+  padding: 0;
+  margin: 0;
+}
+
+.file {
+  padding: 2px;
+  margin: 2px;
+  width: 80px;
+  display: inline-block;
+
+  text-align: center;
+  vertical-align: top;
+}
+
+.file.focus {
+  background-color: #08C;
+  -webkit-border-radius: 4px;
+}
+
+.file .name {
+  width: 80px;
+  word-wrap: break-word;
+}
+
+.file.focus .name {
+  color: white;
+}
+
+.file .icon {
+  margin: auto;
+  margin-top: 0;
+  width: 60px;
+}
+
+.file.focus .icon {
+  -webkit-filter: invert(20%);
+}
+
+img {
+    width: 100%;
+}
+
+#addr-and-files {
+    float: left;
+    position: absolute;
+    left: 200px;
+    right: 0;
+    top: 0;
+    bottom: 50px;
+}
+
+#files-row {
+    background: #FFF;
+    -webkit-border-radius: 2px;
+    margin: -5px 1px 0 -15px;
+    height: 100%;
+    overflow: auto;
+}
+
+#files {
+    margin: 5px;
+    /* overrides user agent setting */
+    -webkit-padding-start: 0px;
+}
+
+.nav-header {
+    font-weight: bolder;
+}
+
+body > div {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: 10px;
+    bottom: 10px;
+}
+
+#nav-and-mainview {
+    float: left;
+    width: 160px;
+    padding: 8px;
+}
