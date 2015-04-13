@@ -1,4 +1,5 @@
 global.$ = $;
+global.user_configs = require('./user-config.json');
 
 var abar = require('address_bar');
 var folder_view = require('folder_view');
