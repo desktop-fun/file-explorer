@@ -1,3 +1,5 @@
+/* -*- css-indent-offset: 2 -*- */
+
 * {
   -webkit-user-select: none;
 }
@@ -11,14 +13,18 @@ body {
   margin: 0;
 }
 
-.file {
+.icon-view .file {
   padding: 2px;
   margin: 2px;
   width: 80px;
   display: inline-block;
-
   text-align: center;
   vertical-align: top;
+}
+
+.list-view .file {
+  margin: 2px;
+  width: 100%;
 }
 
 .file.focus {
@@ -26,23 +32,64 @@ body {
   -webkit-border-radius: 4px;
 }
 
-.file .name {
+.icon-view .file .name {
   width: 80px;
   word-wrap: break-word;
+}
+
+.list-view .file .name {
+  width: 50%;
+  word-wrap: break-word;
+  display: inline-block;
+  -webkit-padding-start: 4px;
 }
 
 .file.focus .name {
   color: white;
 }
 
-.file .icon {
+.icon-view .file .icon {
   margin: auto;
   margin-top: 0;
   width: 60px;
 }
 
+.list-view .file .icon {
+  margin-top: 0;
+  width: 20px;
+  display: inline-block;
+}
+
 .file.focus .icon {
   -webkit-filter: invert(20%);
+}
+
+.icon-view .file .size,
+.icon-view .file .type,
+.icon-view .file .modified_t {
+  display: none;
+}
+
+.list-view .file .size {
+  width: 10%;
+  display: inline-block;
+}
+
+.list-view .file .type {
+  width: 10%;
+  display: inline-block;
+}
+
+.list-view .file .modified_t {
+  width: 20%;
+  display: inline-block;
+}
+
+/* text-truncate with ellipsis */
+.file * {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 img {
