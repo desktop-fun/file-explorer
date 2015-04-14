@@ -66,7 +66,7 @@ body {
 
 .icon-view .file .size,
 .icon-view .file .type,
-.icon-view .file .modified_t {
+.icon-view .file .mtime {
   display: none;
 }
 
@@ -80,7 +80,7 @@ body {
   display: inline-block;
 }
 
-.list-view .file .modified_t {
+.list-view .file .mtime {
   width: 20%;
   display: inline-block;
 }
