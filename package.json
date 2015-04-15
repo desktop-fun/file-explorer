@@ -5,8 +5,8 @@
   "main": "index.html",
   "window": {
     "toolbar": true,
-    "width": 660,
-    "height": 500
+    "width": 800,
+    "height": 600
   },
   "repository": {
     "type": "git",

@@ -7,7 +7,7 @@ var abar = require('address_bar');
 var folder_view = require('folder_view');
 var nav_panel = require('nav_panel');
 var path = require('path');
-var shell = require('nw.gui').Shell;
+var gui = require('nw.gui');
 
 $(document).ready(function() {
   var folder = new folder_view.Folder($('#files'));
@@ -25,7 +25,7 @@ $(document).ready(function() {
     if (mime.type == 'folder') {
       addressbar.enter(mime);
     } else {
-      shell.openItem(mime.path);
+      gui.Shell.openItem(mime.path);
     }
   });
 
@@ -33,7 +33,7 @@ $(document).ready(function() {
     folder.open(dir);
   });
 
-  // TODO xmove to nav_panel.js
+  // TODO move to nav_panel.js
   $('#toggle-view-btn').click(function(event){
     event.preventDefault();
     var files_view = $("#files");
@@ -49,5 +49,56 @@ $(document).ready(function() {
     }
   })
 
+  // Context menu
+  // TODO move to separate files and maybe make better interface for menus.
+  var ctx_menu_click_callback_stub = function(target, item){
+    console.log("CTX Menu: Action [" + item + "] invoked on [" + target + "]");
+  }
+
+  var file_ctx_menu = new gui.Menu();
+  file_ctx_menu.target = "none";
+  ['Open', 'Delete', 'Cut', 'Copy','Properties']
+    .forEach(function(item_name){
+      file_ctx_menu.append(
+        new gui.MenuItem({
+          type: "normal",
+          label: item_name,
+          click: function(){
+            ctx_menu_click_callback_stub(file_ctx_menu.target, item_name);
+          }
+        }))
+    });
+
+  folder.on('contextmenu', function(file_element, ev){
+    file_ctx_menu.target = file_element.attr('data-path');
+    file_ctx_menu.popup(ev.pageX, ev.pageY);
+    return false;
+  })
+
+  var files_view_ctx_menu = new gui.Menu();
+  files_view_ctx_menu.target = "none";
+  ['New', 'New Folder', '|', 'Open Terminal', 'Folder Properties']
+    .forEach(function(item_name){
+      var type = "normal";
+      if (item_name === '|'){
+        type = "separator"
+      };
+      files_view_ctx_menu.append(
+        new gui.MenuItem({
+          type: type,
+          label: item_name,
+          click: function(){
+            ctx_menu_click_callback_stub(files_view_ctx_menu.target, item_name);
+          },
+        }));
+    });
+
+  // can't use "#files" as it serves as delegator for ".file"
+  $("#files-row").on('contextmenu', function(ev){
+    $("#files").children('.focus').removeClass('focus');
+    files_view_ctx_menu.target = "<files view blank>"
+    files_view_ctx_menu.popup(ev.pageX, ev.pageY);
+    return false;
+  })
 });
 
