@@ -8,6 +8,8 @@ var folder_view = require('folder_view');
 var nav_panel = require('nav_panel');
 var path = require('path');
 var gui = require('nw.gui');
+var xdg_trashdir = require('trash/node_modules/xdg-trash/node_modules/xdg-trashdir');
+
 
 $(document).ready(function() {
   var folder = new folder_view.Folder($('#files'));
@@ -99,6 +101,22 @@ $(document).ready(function() {
     files_view_ctx_menu.target = "<files view blank>"
     files_view_ctx_menu.popup(ev.pageX, ev.pageY);
     return false;
-  })
+  });
+
+  $("#Home").on('click', function(){
+    folder.open(open_dir);
+    addressbar.set(open_dir);
+  });
+
+  $("#Trash").on('click',function(){
+    xdg_trashdir(null, function(err, trash_dir){
+      if (err) {
+         console.log(err);
+      } else {
+         folder.open(trash_dir+"/files");
+         addressbar.set("Trash");
+      }
+    });
+  });
 });
 
