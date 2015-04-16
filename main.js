@@ -9,7 +9,7 @@ var nav_panel = require('nav_panel');
 var path = require('path');
 var gui = require('nw.gui');
 var xdg_trashdir = require('trash/node_modules/xdg-trash/node_modules/xdg-trashdir');
-
+var fs = require('fs');
 
 $(document).ready(function() {
   var folder = new folder_view.Folder($('#files'));
@@ -113,7 +113,12 @@ $(document).ready(function() {
       if (err) {
          console.log(err);
       } else {
-         folder.open(trash_dir+"/files");
+         if (!fs.existsSync(trash_dir)) {
+             trash_dir = "<about:trash-empty>";
+         } else {
+             trash_dir = path.join(trash_dir, "files");
+         }
+         folder.open(trash_dir);
          addressbar.set("Trash");
       }
     });
