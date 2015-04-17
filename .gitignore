@@ -1,0 +1,14 @@
+# Development files, exclude all 3rd party libraries from development
+node_modules/*
+!node_modules/my/
+bower_components/*
+
+# Vim
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+*.un~
+*~
+
+# Emacs
+*~
+\#*\#
