@@ -3,9 +3,9 @@
 global.$ = $;
 global.user_configs = require('./user-config.json');
 
-var abar = require('address_bar');
-var folder_view = require('folder_view');
-var nav_panel = require('nav_panel');
+var abar = require('my/address_bar');
+var folder_view = require('my/folder_view');
+var nav_panel = require('my/nav_panel');
 var path = require('path');
 var gui = require('nw.gui');
 
