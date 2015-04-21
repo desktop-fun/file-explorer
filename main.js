@@ -11,6 +11,7 @@ var gui = require('nw.gui');
 var xdg_trashdir = require('xdg-trashdir');
 var trash = require('trash');
 var fs = require('fs');
+var child_process = require('child_process');
 
 $(document).ready(function() {
   var folder = new folder_view.Folder($('#files'));
@@ -92,6 +93,7 @@ $(document).ready(function() {
            break;
        case 'Cut':break;
        case 'Copy':break;
+       case 'Paste':break;
        case 'Rename':
            fs.rename(target,path.join(path.dirname(target),"New folder"),function(err){
                if (err) {
@@ -101,7 +103,11 @@ $(document).ready(function() {
                addressbar.emit('navigate',path.dirname(target));
            });
            break;
-       case 'Open Terminal':break;
+       case 'Open Terminal':
+           child_process.exec('gnome-terminal --working-directory='+ addressbar.current_path, function(err, stdout, stderr){
+              console.log('open terminal');
+           });
+           break;
        case 'Properties':break; 
        case 'Folder Properties':break;
        default: 
@@ -131,7 +137,7 @@ $(document).ready(function() {
 
   var files_view_ctx_menu = new gui.Menu();
   files_view_ctx_menu.target = "none";
-  ['New', 'New Folder', '|', 'Open Terminal', 'Folder Properties']
+  ['New', 'New Folder', '|', 'Open Terminal', 'Paste', 'Folder Properties']
     .forEach(function(item_name){
       var type = "normal";
       if (item_name === '|'){
