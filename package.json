@@ -16,6 +16,8 @@
   "dependencies": {
     "filesize": "^3.1.2",
     "jade": "^1.9.2",
-    "underscore": "^1.8.3"
+    "trash": "^1.4.1",
+    "underscore": "^1.8.3",
+    "xdg-trashdir": "^1.1.1"
   }
 }

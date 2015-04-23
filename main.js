@@ -8,6 +8,10 @@ var folder_view = require('my/folder_view');
 var nav_panel = require('my/nav_panel');
 var path = require('path');
 var gui = require('nw.gui');
+var xdg_trashdir = require('xdg-trashdir');
+var trash = require('trash');
+var fs = require('fs');
+var child_process = require('child_process');
 
 $(document).ready(function() {
   var folder = new folder_view.Folder($('#files'));
@@ -31,6 +35,7 @@ $(document).ready(function() {
 
   addressbar.on('navigate', function(dir) {
     folder.open(dir);
+    addressbar.set(dir);
   });
 
   // TODO move to nav_panel.js
@@ -53,11 +58,66 @@ $(document).ready(function() {
   // TODO move to separate files and maybe make better interface for menus.
   var ctx_menu_click_callback_stub = function(target, item){
     console.log("CTX Menu: Action [" + item + "] invoked on [" + target + "]");
+    switch (item) {
+       case 'Open':
+           folder.open(target);
+           addressbar.set(target);
+           break;
+       case 'New':
+           
+           break;
+       case 'New Folder':
+           var cur_dir = addressbar.current_path;
+           var untitled = 'Untitled Folder';
+           var filename = path.join(cur_dir, untitled );
+           var filename2 = filename;
+           var count =2;
+           while (fs.existsSync(filename2)){
+               console.log(filename2);
+               filename2 = path.join(cur_dir, untitled.concat(' ',count++));
+               console.log(filename2);
+           }
+           fs.mkdir(filename2, function(err){
+              if(err) throw err;
+              addressbar.emit('navigate', cur_dir);
+           });
+           break; 
+       case 'Delete':
+           trash([path.join(target)], function(err){
+              if (err) {
+                 if (err = 'ENOTEMPTY') alert("ENOTEMPTY!");
+                 throw err;
+           }
+           addressbar.emit('navigate', path.dirname(target));
+           });
+           break;
+       case 'Cut':break;
+       case 'Copy':break;
+       case 'Paste':break;
+       case 'Rename':
+           fs.rename(target,path.join(path.dirname(target),"New folder"),function(err){
+               if (err) {
+                  throw err;
+               }
+               console.log("Rename successfully");
+               addressbar.emit('navigate',path.dirname(target));
+           });
+           break;
+       case 'Open Terminal':
+           child_process.exec('gnome-terminal --working-directory='+ addressbar.current_path, function(err, stdout, stderr){
+              console.log('open terminal');
+           });
+           break;
+       case 'Properties':break; 
+       case 'Folder Properties':break;
+       default: 
+           break;
+    }
   }
 
   var file_ctx_menu = new gui.Menu();
   file_ctx_menu.target = "none";
-  ['Open', 'Delete', 'Cut', 'Copy','Properties']
+  ['Open', 'Delete', 'Cut', 'Copy','Rename','Properties']
     .forEach(function(item_name){
       file_ctx_menu.append(
         new gui.MenuItem({
@@ -77,7 +137,7 @@ $(document).ready(function() {
 
   var files_view_ctx_menu = new gui.Menu();
   files_view_ctx_menu.target = "none";
-  ['New', 'New Folder', '|', 'Open Terminal', 'Folder Properties']
+  ['New', 'New Folder', '|', 'Open Terminal', 'Paste', 'Folder Properties']
     .forEach(function(item_name){
       var type = "normal";
       if (item_name === '|'){
@@ -99,6 +159,31 @@ $(document).ready(function() {
     files_view_ctx_menu.target = "<files view blank>"
     files_view_ctx_menu.popup(ev.pageX, ev.pageY);
     return false;
-  })
+  });
+
+  $("#Home").on('click', function(){
+    folder.open(open_dir);
+    addressbar.set(open_dir);
+  });
+
+  $("#Trash").on('click',function(){
+    if (process.platform === 'linux') {
+        xdg_trashdir(null, function(err, trash_dir){
+            if (err) {
+                console.log(err);
+            } else {
+                if (!fs.existsSync(trash_dir)) {
+                    trash_dir = "<about:trash-empty>";
+                } else {
+                    trash_dir = path.join(trash_dir, "files");
+                }
+                folder.open(trash_dir);
+                addressbar.set("Trash");
+           }
+       });
+    } else if(process.platform === 'win32') {
+        
+    };
+  });
 });
 
